@@ -1,3 +1,4 @@
+// 연락처 스키마
 const mongoose = require("mongoose");
 
 const contactSchema = new mongoose.Schema(
