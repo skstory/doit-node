@@ -20,7 +20,12 @@ app.set("views", "./views");
 
 app.use(express.static("public"));
 
+// url에 담겨서 가게되는 여러가지 요청 본문을 파싱
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/", require("./routes/main"));
+app.use("/", require("./routes/admin"));
 
 app.listen(port, () => {
   console.log(`App listeing on port ${port}`);
