@@ -20,6 +20,7 @@ dbConnect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/", require("./routes/loginRoutes"));
 app.use("/contacts", require("./routes/contactRoutes"));
 
 app.listen(4000, () => {
