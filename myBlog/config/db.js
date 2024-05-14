@@ -1,0 +1,11 @@
+// db에 접속하는 코드
+const mongoose = require("mongoose");
+const asyncHandler = require("express-async-handler");
+require("dotenv").config();
+
+const connectDb = asyncHandler(async () => {
+  const connect = await mongoose.connect(process.env.MONGODB_URI);
+  console.log(`DB connected : ${connect.connection.host}`);
+});
+
+module.exports = connectDb;
