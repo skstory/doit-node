@@ -9,6 +9,27 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 
+// Check Login
+// 로그인을 체크하는 미들웨어
+// 관리자인지 아닌지 체크
+// 관리자 토큰이 있는지 없는지 체크
+// 토큰이 없으면 로그인 창으로 리다이렉트
+// 토큰이 있으면 내가 발행한 것인지 체크
+const checkLogin = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    res.redirect("/admin");
+  } else {
+    try {
+      const decoded = jwt.verify(token, jwtSecret);
+      req.userId = decoded.userId;
+      next();
+    } catch (error) {
+      res.redirect("/admin");
+    }
+  }
+};
+
 // Admin Page
 // GET /admin
 router.get("/admin", (req, res) => {
@@ -74,6 +95,7 @@ router.post(
 // GET /allPosts
 router.get(
   "/allPosts",
+  checkLogin,
   asyncHandler(async (req, res) => {
     const locals = {
       title: "Posts",
@@ -91,4 +113,30 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+// Admin - Add Post
+// GET /add
+router.get(
+  "/add",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    const locals = {
+      title: "게시물 작성",
+    };
+    res.render("admin/add", { locals, layout: adminLayout });
+  })
+);
+
+// Admin - Add post
+// POST /add
+router.post(
+  "/add",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    const { title, body } = req.body;
+    const newPost = new Post({ title: title, body: body });
+
+    await Post.create(newPost);
+    res.redirect("/allPosts");
+  })
+);
 module.exports = router;
