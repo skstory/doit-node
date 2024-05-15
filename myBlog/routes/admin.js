@@ -139,4 +139,31 @@ router.post(
     res.redirect("/allPosts");
   })
 );
+
+// Admin - Edit Post
+// GET /edit/:id
+router.get(
+  "/edit/:id",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    const locals = { title: "게시물 편집" };
+    const data = await Post.findOne({ _id: req.params.id });
+    res.render("admin/edit", { locals, data, layout: adminLayout });
+  })
+);
+
+// Admin - Edit Post
+// PUT /edit/:id
+router.put(
+  "/edit/:id",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    await Post.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      body: req.body.body,
+      createdAt: Date.now(),
+    });
+    res.redirect("/allPosts");
+  })
+);
 module.exports = router;

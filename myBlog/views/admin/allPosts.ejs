@@ -8,7 +8,7 @@
   <li>
     <a href="/post/<%= post._id %>"> <%= post.title %> </a>
     <div class="admin-post-controls">
-      <a href="#" class="btn">편집</a>
+      <a href="/edit/<%= post._id %>" class="btn">편집</a>
       <form action="#">
         <input type="submit" value="삭제" class="btn-delete btn" />
       </form>
